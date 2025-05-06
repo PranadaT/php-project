@@ -3,6 +3,6 @@
 </html>
 <?php
 echo "PHP Project on jenkins pipeline";
-echo"2";
+echo"3";
 
 ?>
