@@ -2,6 +2,6 @@
   <h1>Sample project</h1>
 </html>
 <?php
-echo "fifth PHP Project on jenkins pipeline";
+echo "new PHP Project on jenkins pipeline";
 
 ?>
