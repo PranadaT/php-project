@@ -1,0 +1,44 @@
+pipeline {
+	    agent {
+	        docker {
+	            image 'httpd:2.4' // Use the same base image as in your Dockerfile
+	            args '-p 8080:80' // Expse prt 80 as 8080 n the hst
+	        }
+	    }
+	    stages {
+	        stage('Build') {
+	            steps {
+	                git 'https://github.com/PranadaT/php-project.git'
+	                echo "Building the Docker image..."
+	                //  N need t build, we are using the pre-built image.
+	                // docker.build("my-web-app-image", ".")
+	            }
+	        }
+	        stage('Deploy') {
+	            steps {
+	                echo "Running the Docker container..."
+	                script {
+	                    // Stop any existing container (optinal, for cleanup)
+	                    try {
+	                        docker.withRegistry('', 'dockerhub-cred') {  // '' fr Dcker Hub, r yur registry
+	                            def image = docker.image('httpd:2.4') // Pull the image.
+	                            def container = image.run()
+	                            container.stop()
+	                        }
+	
+	                    } catch (Exceptin e) {
+	                        println "N existing container t stop."
+	                    }
+	
+	                    // Run the Docker cntainer, mapping prt 80 t 8080 n the hst
+	                    docker.withRegistry('', 'dockerhub-cred') {
+	                        def image = docker.image('httpd:2.4')
+	                        image.run('-p 8080:80 -d')
+	                    }
+	
+	                    ech "HTML cntent cpied t cntainer."
+	                }
+	            }
+	        }
+	    }
+	}
